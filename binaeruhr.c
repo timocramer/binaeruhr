@@ -390,7 +390,7 @@ static uint16_t time_difference_in_ms(uint8_t timer_value_from, uint8_t timer_va
 	return milliseconds;
 }
 
-static void disable_adc() {
+static void disable_analog_comparator() {
 	ACSR |= _BV(ACD);
 }
 
@@ -408,7 +408,7 @@ int main (void) {
 	led_init_outputs();
 	init_lid_pin();
 	init_button_pin();
-	disable_adc();
+	disable_analog_comparator();
 	init_timer2(TIME_COUNTING_PRESCALER);
 	
 	blink_on_startup();
