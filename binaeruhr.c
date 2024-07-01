@@ -112,10 +112,6 @@ static bool button_is_down() {
 	return !(PIND & _BV(PD2));
 }
 
-static bool button_is_up() {
-	return !button_is_down();
-}
-
 static void lid_closed_action() {
 	watch_state = JUST_SHOW_TIME;
 	set_timer2_prescaler(TIME_COUNTING_PRESCALER, false);
