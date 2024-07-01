@@ -407,7 +407,7 @@ static void blink_on_startup() {
 	}
 }
 
-int main (void) {
+int main(void) {
 	led_init_outputs();
 	init_lid_pin();
 	init_button_pin();
