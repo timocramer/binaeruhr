@@ -392,13 +392,18 @@ static void disable_analog_comparator() {
 	ACSR |= _BV(ACD);
 }
 
+#define STARTUP_DELAY_MS 80
 static void blink_on_startup() {
-	const uint8_t iterations = 3;
-	for(uint8_t i = 0; i < iterations; ++i) {
-		leds_on();
-		_delay_ms(200);
-		leds_off();
-		_delay_ms(200);
+	// this should draw a clockwise circle starting with hour8
+	led_minutes_off();
+	for(int8_t i = 3; i >= 0; --i) {
+		led_show_hours(1 << i);
+		_delay_ms(STARTUP_DELAY_MS);
+	}
+	led_hours_off();
+	for(int8_t i = 0; i < 6; ++i) {
+		led_show_minutes(1 << i);
+		_delay_ms(STARTUP_DELAY_MS);
 	}
 }
 
