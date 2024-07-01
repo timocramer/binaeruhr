@@ -46,7 +46,7 @@ static void show_time(const struct localtime);
 
 static uint8_t current_timer_value();
 static uint16_t time_difference_in_ms(uint8_t timer_value_from, uint8_t timer_value_to, uint8_t timer_overflows);
-static void set_timer2_prescaler(uint16_t prescaler);
+static void set_timer2_prescaler(uint16_t prescaler, bool reset_timer_value);
 
 
 static void normalize_time(struct localtime *time) {
@@ -118,7 +118,7 @@ static bool button_is_up() {
 
 static void lid_closed_action() {
 	watch_state = JUST_SHOW_TIME;
-	set_timer2_prescaler(TIME_COUNTING_PRESCALER);
+	set_timer2_prescaler(TIME_COUNTING_PRESCALER, false);
 	leds_off();
 }
 
@@ -126,17 +126,17 @@ static void switch_time_setting_state() {
 	switch(watch_state) {
 		case JUST_SHOW_TIME:
 			watch_state = SET_HOURS;
-			set_timer2_prescaler(TIME_SETTING_PRESCALER);
+			set_timer2_prescaler(TIME_SETTING_PRESCALER, true);
 			show_leds_to_set = false;
 			return;
 		case SET_HOURS:
 			watch_state = SET_MINUTES;
-			set_timer2_prescaler(TIME_SETTING_PRESCALER);
+			set_timer2_prescaler(TIME_SETTING_PRESCALER, true);
 			show_leds_to_set = false;
 			return;
 		case SET_MINUTES:
 			watch_state = JUST_SHOW_TIME;
-			set_timer2_prescaler(TIME_COUNTING_PRESCALER);
+			set_timer2_prescaler(TIME_COUNTING_PRESCALER, true);
 			if(lid_is_open()) {
 				show_time(watch_time);
 			}
@@ -302,43 +302,43 @@ static void show_time(const struct localtime time) {
 	led_show_time(time.hours, time.minutes);
 }
 
-static bool all_bits_are_set(uint8_t value, uint8_t mask) {
-	return (value & mask) == mask;
-}
-
 static uint16_t current_timer_prescaler() {
-	const uint8_t control_register_value = TCCR2B;
-	if(all_bits_are_set(control_register_value, _BV(CS22) | _BV(CS21) | _BV(CS20))) {
+	const uint8_t prescaler_bits = TCCR2B & (_BV(CS22) | _BV(CS21) | _BV(CS20));
+	
+	switch(prescaler_bits) {
+	case (_BV(CS22) | _BV(CS21) | _BV(CS20)):
 		return 1024;
-	} else if(all_bits_are_set(control_register_value, _BV(CS22) | _BV(CS21))) {
+	case (_BV(CS22) | _BV(CS21)):
 		return 256;
-	} else if(all_bits_are_set(control_register_value, _BV(CS22) | _BV(CS20))) {
+	case (_BV(CS22) | _BV(CS20)):
 		return 128;
-	} else if(all_bits_are_set(control_register_value, _BV(CS22))) {
+	case (_BV(CS22)):
 		return 64;
-	} else if(all_bits_are_set(control_register_value, _BV(CS21) | _BV(CS20))) {
+	case (_BV(CS21) | _BV(CS20)):
 		return 32;
-	} else if(all_bits_are_set(control_register_value, _BV(CS20))) {
+	case (_BV(CS21)):
 		return 8;
-	} else {
+	case (_BV(CS20)):
+		return 1;
+	default:
 		return 0;
 	}
 }
 
-static void set_timer2_prescaler(uint16_t prescaler) {
-	if(current_timer_prescaler() == prescaler) {
-		// prescaler already set, we do nothing
-		return;
-	}
-	
+// prescaler = 0: no clock source
+// prescaler = 1: no prescaling
+static void set_timer2_prescaler(uint16_t prescaler, bool reset_timer_value) {
 	uint8_t new_prescaler_bits = 0;
 	
 	switch(prescaler) {
 	case 0:
 		new_prescaler_bits = 0;
 		break;
-	case 8:
+	case 1:
 		new_prescaler_bits = _BV(CS20);
+		break;
+	case 8:
+		new_prescaler_bits = _BV(CS21);
 		break;
 	case 32:
 		new_prescaler_bits = _BV(CS21) | _BV(CS20);
@@ -359,7 +359,9 @@ static void set_timer2_prescaler(uint16_t prescaler) {
 		return;
 	}
 	
-	TCNT2 = 0;
+	if(reset_timer_value) {
+		TCNT2 = 0;
+	}
 	
 	TCCR2B = (TCCR2B & ~(_BV(CS22) | _BV(CS21) | _BV(CS20))) | new_prescaler_bits;
 	loop_until_bit_is_clear(ASSR, TCR2BUB);
@@ -368,7 +370,7 @@ static void set_timer2_prescaler(uint16_t prescaler) {
 static void init_timer2(uint16_t prescaler) {
 	GTCCR |= _BV(TSM) | _BV(PSRASY);  // Stop timer and reset prescaler
 	ASSR |= _BV(AS2); // Set asynchronous mode
-	set_timer2_prescaler(prescaler);
+	set_timer2_prescaler(prescaler, false);
 	TIMSK2 |= _BV(TOIE2); // Enable overflow-interrupt
 	GTCCR &= ~_BV(TSM); // start timer
 }
