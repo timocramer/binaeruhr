@@ -407,7 +407,18 @@ static void blink_on_startup() {
 	}
 }
 
+static void init_unused_pins() {
+	// from the datasheet:
+	// If some pins are unused, it is recommended to ensure that these pins have a defined level. [...]
+	// The simplest method to ensure a defined level of an unused pin, is to enable the internal pull-up.
+	DDRC &= ~(_BV(PC0) | _BV(PC1) | _BV(PC2) | _BV(PC3) | _BV(PC4));
+	PORTC |= (_BV(PC0) | _BV(PC1) | _BV(PC2) | _BV(PC3) | _BV(PC4));
+	DDRD &= ~(_BV(PD5) | _BV(PD6) | _BV(PD7));
+	PORTD |= (_BV(PD5) | _BV(PD6) | _BV(PD7));
+}
+
 int main(void) {
+	init_unused_pins();
 	led_init_outputs();
 	init_lid_pin();
 	init_button_pin();
