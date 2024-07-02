@@ -128,18 +128,18 @@ static void switch_time_setting_state() {
 		watch_state = SET_HOURS;
 		set_timer2_prescaler(TIME_SETTING_PRESCALER, true);
 		show_leds_to_set = false;
-		return;
+		break;
 	case SET_HOURS:
 		watch_state = SET_MINUTES;
 		set_timer2_prescaler(TIME_SETTING_PRESCALER, true);
 		show_leds_to_set = false;
-		return;
+		break;
 	case SET_MINUTES:
 		set_time_showing_mode(true);
 		if(lid_is_open()) {
 			show_time(watch_time);
 		}
-		return;
+		break;
 	};
 	
 	// reset seconds on every state change
@@ -172,13 +172,13 @@ static void short_press_action() {
 	switch(watch_state) {
 	case JUST_SHOW_TIME:
 		// do intentionally nothing
-		return;
+		break;
 	case SET_HOURS:
 		time_setting_increment_hours();
-		return;
+		break;
 	case SET_MINUTES:
 		time_setting_increment_minutes();
-		return;
+		break;
 	};
 }
 
@@ -275,13 +275,13 @@ static void timer_overflow_action() {
 	switch(watch_state) {
 	case JUST_SHOW_TIME:
 		timer_overflow_action_in_show_time_mode();
-		return;
+		break;
 	case SET_HOURS:
 		timer_overflow_action_in_set_hours_mode();
-		return;
+		break;
 	case SET_MINUTES:
 		timer_overflow_action_in_set_minutes_mode();
-		return;
+		break;
 	};
 }
 
