@@ -124,22 +124,22 @@ static void lid_closed_action() {
 
 static void switch_time_setting_state() {
 	switch(watch_state) {
-		case JUST_SHOW_TIME:
-			watch_state = SET_HOURS;
-			set_timer2_prescaler(TIME_SETTING_PRESCALER, true);
-			show_leds_to_set = false;
-			return;
-		case SET_HOURS:
-			watch_state = SET_MINUTES;
-			set_timer2_prescaler(TIME_SETTING_PRESCALER, true);
-			show_leds_to_set = false;
-			return;
-		case SET_MINUTES:
-			set_time_showing_mode(true);
-			if(lid_is_open()) {
-				show_time(watch_time);
-			}
-			return;
+	case JUST_SHOW_TIME:
+		watch_state = SET_HOURS;
+		set_timer2_prescaler(TIME_SETTING_PRESCALER, true);
+		show_leds_to_set = false;
+		return;
+	case SET_HOURS:
+		watch_state = SET_MINUTES;
+		set_timer2_prescaler(TIME_SETTING_PRESCALER, true);
+		show_leds_to_set = false;
+		return;
+	case SET_MINUTES:
+		set_time_showing_mode(true);
+		if(lid_is_open()) {
+			show_time(watch_time);
+		}
+		return;
 	};
 	
 	// reset seconds on every state change
@@ -170,15 +170,15 @@ static void time_setting_increment_minutes() {
 
 static void short_press_action() {
 	switch(watch_state) {
-		case JUST_SHOW_TIME:
-			// do intentionally nothing
-			return;
-		case SET_HOURS:
-			time_setting_increment_hours();
-			return;
-		case SET_MINUTES:
-			time_setting_increment_minutes();
-			return;
+	case JUST_SHOW_TIME:
+		// do intentionally nothing
+		return;
+	case SET_HOURS:
+		time_setting_increment_hours();
+		return;
+	case SET_MINUTES:
+		time_setting_increment_minutes();
+		return;
 	};
 }
 
@@ -273,15 +273,15 @@ static void timer_overflow_action_in_set_minutes_mode() {
 
 static void timer_overflow_action() {
 	switch(watch_state) {
-		case JUST_SHOW_TIME:
-			timer_overflow_action_in_show_time_mode();
-			return;
-		case SET_HOURS:
-			timer_overflow_action_in_set_hours_mode();
-			return;
-		case SET_MINUTES:
-			timer_overflow_action_in_set_minutes_mode();
-			return;
+	case JUST_SHOW_TIME:
+		timer_overflow_action_in_show_time_mode();
+		return;
+	case SET_HOURS:
+		timer_overflow_action_in_set_hours_mode();
+		return;
+	case SET_MINUTES:
+		timer_overflow_action_in_set_minutes_mode();
+		return;
 	};
 }
 
