@@ -112,9 +112,13 @@ static bool button_is_down() {
 	return !(PIND & _BV(PD2));
 }
 
-static void lid_closed_action() {
+static void set_time_showing_mode(bool reset_timer_value) {
 	watch_state = JUST_SHOW_TIME;
-	set_timer2_prescaler(TIME_COUNTING_PRESCALER, false);
+	set_timer2_prescaler(TIME_COUNTING_PRESCALER, reset_timer_value);
+}
+
+static void lid_closed_action() {
+	set_time_showing_mode(false);
 	leds_off();
 }
 
@@ -131,8 +135,7 @@ static void switch_time_setting_state() {
 			show_leds_to_set = false;
 			return;
 		case SET_MINUTES:
-			watch_state = JUST_SHOW_TIME;
-			set_timer2_prescaler(TIME_COUNTING_PRESCALER, true);
+			set_time_showing_mode(true);
 			if(lid_is_open()) {
 				show_time(watch_time);
 			}
