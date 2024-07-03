@@ -20,11 +20,14 @@ static const uint16_t TIME_SETTING_PRESCALER = 64;
 	#error "TIME_COUNTING_PRESCALER needs to be at least 128"
 #endif
 
+static const uint16_t QUARTZ_FREQUENCY = 32768;
+static const uint16_t TIMER_OVERFLOW_TICKS = 256;
+
 // quartz frequency is 32768 Hz and timer has 8 bits, so a timer overflow happens every (prescaler / (32768 / 256)) seconds
-static const uint8_t second_increment = (uint16_t)TIME_COUNTING_PRESCALER / 128;
+static const uint8_t SECOND_INCREMENT = (uint16_t)TIME_COUNTING_PRESCALER / (QUARTZ_FREQUENCY / TIMER_OVERFLOW_TICKS);
 
 // debug
-// static const uint8_t second_increment = 60;
+// static const uint8_t SECOND_INCREMENT = 60;
 
 static volatile struct localtime watch_time = {
 	.seconds = 0,
@@ -67,7 +70,7 @@ static void normalize_time(struct localtime *time) {
 }
 
 static void increment_time(struct localtime *time) {
-	time->seconds += second_increment;
+	time->seconds += SECOND_INCREMENT;
 	normalize_time(time);
 }
 
@@ -384,10 +387,8 @@ static uint16_t time_difference_in_ms(uint8_t timer_value_from, uint8_t timer_va
 		return 0;
 	}
 	
-	const uint16_t quartz_frequency = 32768;
-	const uint16_t timer_overflow_ticks = 256;
-	const uint32_t ticks_total = (timer_overflow_ticks * timer_overflows) + timer_value_to - timer_value_from;
-	const uint16_t milliseconds = (ticks_total * 1000) / (quartz_frequency / prescaler);
+	const uint32_t ticks_total = (TIMER_OVERFLOW_TICKS * timer_overflows) + timer_value_to - timer_value_from;
+	const uint16_t milliseconds = (ticks_total * 1000) / (QUARTZ_FREQUENCY / prescaler);
 	return milliseconds;
 }
 
