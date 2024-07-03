@@ -4,8 +4,8 @@
 
 void led_init_outputs() {
     DDRD |= _BV(PD4); // hour8
-    DDRD |= _BV(PD2); // hour4
-    DDRD |= _BV(PD1); // hour2
+    DDRD |= _BV(PD1); // hour4
+    DDRD |= _BV(PD0); // hour2
     DDRC |= _BV(PC5); // hour1
     
     DDRB |= _BV(PB0); // minute32
@@ -25,19 +25,19 @@ static void hour8_off() {
 }
 
 static void hour4_on() {
-    PORTD |= _BV(PD2);
-}
-
-static void hour4_off() {
-    PORTD &= ~_BV(PD2);
-}
-
-static void hour2_on() {
     PORTD |= _BV(PD1);
 }
 
-static void hour2_off() {
+static void hour4_off() {
     PORTD &= ~_BV(PD1);
+}
+
+static void hour2_on() {
+    PORTD |= _BV(PD0);
+}
+
+static void hour2_off() {
+    PORTD &= ~_BV(PD0);
 }
 
 static void hour1_on() {
