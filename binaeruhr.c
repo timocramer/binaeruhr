@@ -372,7 +372,7 @@ static void set_timer2_prescaler(uint16_t prescaler, bool reset_timer_value) {
 static void init_timer2(uint16_t prescaler) {
 	GTCCR |= _BV(TSM) | _BV(PSRASY);  // Stop timer and reset prescaler
 	ASSR |= _BV(AS2); // Set asynchronous mode
-	set_timer2_prescaler(prescaler, false);
+	set_timer2_prescaler(prescaler, true);
 	TIMSK2 |= _BV(TOIE2); // Enable overflow-interrupt
 	GTCCR &= ~_BV(TSM); // start timer
 }
