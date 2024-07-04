@@ -2872,6 +2872,16 @@
 		)
 		(uuid 084a5e13-b496-4afe-8f7a-07f3354ae25a)
 	)
+	(text "Programming Pins"
+		(exclude_from_sim no)
+		(at 216.916 55.88 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "18b8e983-a604-4a44-8232-e8c0b8d56cf1")
+	)
 	(global_label "Minute4"
 		(shape input)
 		(at 226.06 128.27 180)
