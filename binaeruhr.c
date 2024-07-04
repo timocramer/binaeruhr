@@ -430,6 +430,7 @@ int main(void) {
 	init_timer2(TIME_COUNTING_PRESCALER);
 	
 	blink_on_startup();
+	show_time(watch_time);
 	
 	sei();
 	
