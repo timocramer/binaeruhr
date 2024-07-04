@@ -241,8 +241,10 @@ static void timer2_write_zero() {
 }
 
 static void timer_overflow_action_in_show_time_mode() {
-	// typecast to call this function despite volatile qualifier.
-	increment_time((struct localtime*) &watch_time);
+	// work on a copy, so that the volatile qualifier is not discarded
+	struct localtime copy = watch_time;
+	increment_time(&copy);
+	watch_time = copy;
 	
 	if(lid_is_open()) {
 		show_time(watch_time);
