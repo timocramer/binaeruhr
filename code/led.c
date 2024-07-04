@@ -174,8 +174,8 @@ void led_minutes_off() {
 }
 
 void leds_off() {
-	led_hours_off();
-	led_minutes_off();
+    led_hours_off();
+    led_minutes_off();
 }
 
 void leds_on() {
