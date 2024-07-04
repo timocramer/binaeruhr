@@ -1,7 +1,7 @@
 CC=avr-gcc
 OBJCOPY=avr-objcopy
 
-CFLAGS=-Os -Wall -Wextra -DF_CPU=1000000 -mmcu=atmega48pa --std=c23
+CFLAGS=-Os -Wall -Wextra -Wshadow -DF_CPU=1000000 -mmcu=atmega48pa --std=c23
 LDFLAGS=
 
 BINARY=binaeruhr.hex
