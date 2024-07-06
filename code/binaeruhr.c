@@ -61,8 +61,8 @@ static void normalize_time(struct localtime *time) {
         time->minutes -= 60;
         time->hours += 1;
     }
-    if(time->hours > 12) {
-        time->hours = 1;
+    while(time->hours > 12) {
+        time->hours -= 12;
     }
     if(time->hours == 0) {
         time->hours = 12;
