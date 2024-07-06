@@ -374,8 +374,13 @@ static void set_timer2_prescaler(uint16_t prescaler, bool reset_timer_value) {
         wait_for_finished_timer_operation();
     }
     
-    TCCR2B = (TCCR2B & ~(_BV(CS22) | _BV(CS21) | _BV(CS20))) | new_prescaler_bits;
-    wait_for_finished_timer_operation();
+    const uint8_t current_register_value = TCCR2B;
+    const uint8_t current_prescaler_bits = current_register_value & (_BV(CS22) | _BV(CS21) | _BV(CS20));
+    
+    if(current_prescaler_bits != new_prescaler_bits) {
+        TCCR2B = (current_register_value & ~(_BV(CS22) | _BV(CS21) | _BV(CS20))) | new_prescaler_bits;
+        wait_for_finished_timer_operation();
+    }
 }
 
 static void reset_unused_timer_registers() {
