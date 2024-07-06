@@ -378,9 +378,23 @@ static void set_timer2_prescaler(uint16_t prescaler, bool reset_timer_value) {
     wait_for_finished_timer_operation();
 }
 
+static void reset_unused_timer_registers() {
+    // the datasheet says after setting async mode, these registers (plus the ones set
+    // in set_timer2_prescaler) can be corrupted. so we set them to default
+    
+    wait_for_finished_timer_operation();
+    TCCR2A = 0x00;
+    wait_for_finished_timer_operation();
+    OCR2A = 0x00;
+    wait_for_finished_timer_operation();
+    OCR2B = 0x00;
+    wait_for_finished_timer_operation();
+}
+
 static void init_timer2(uint16_t prescaler) {
     GTCCR |= _BV(TSM) | _BV(PSRASY);  // Stop timer and reset prescaler
     ASSR |= _BV(AS2); // Set asynchronous mode
+    reset_unused_timer_registers();
     set_timer2_prescaler(prescaler, true);
     TIMSK2 |= _BV(TOIE2); // Enable overflow-interrupt
     GTCCR &= ~_BV(TSM); // start timer
