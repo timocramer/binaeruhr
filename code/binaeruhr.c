@@ -419,7 +419,23 @@ static void disable_analog_comparator() {
     ACSR |= _BV(ACD);
 }
 
-#define STARTUP_DELAY_MS 80
+#define STARTUP_BLINK_DELAY_MS 80
+
+static void startup_circle_blink(uint8_t iterations) {
+    uint16_t bit_pattern = 1;
+    
+    for(uint8_t i = 0; i < iterations; ++i) {
+        led_show_bit_pattern(bit_pattern);
+        
+        if(bit_pattern & 1024) {
+            bit_pattern = (bit_pattern << 1) | 0;
+        } else {
+            bit_pattern = (bit_pattern << 1) | 1;
+        }
+        
+        _delay_ms(STARTUP_BLINK_DELAY_MS);
+    }
+}
 
 // this function should draw a clockwise circle starting with hour8, every call shows another LED, so we can see which part is stuck
 static void startup_debug_blink() {
@@ -428,7 +444,7 @@ static void startup_debug_blink() {
     led_show_bit_pattern((uint16_t)1 << startup_sequence_index);
     
     startup_sequence_index = increment_with_overflow(startup_sequence_index, 9, 0);
-    _delay_ms(STARTUP_DELAY_MS);
+    _delay_ms(STARTUP_BLINK_DELAY_MS);
 }
 
 static void init_unused_pins() {
@@ -446,24 +462,21 @@ int main(void) {
     init_unused_pins();
     led_init_outputs();
     
-    startup_debug_blink();
+    startup_circle_blink(20);
     
+    startup_debug_blink();
     init_lid_pin();
     
     startup_debug_blink();
-    
     init_button_pin();
     
     startup_debug_blink();
-    
     disable_analog_comparator();
     
     startup_debug_blink();
-    
     init_timer2(TIME_COUNTING_PRESCALER);
     
     startup_debug_blink();
-    
     show_time(watch_time);
     
     sei();
