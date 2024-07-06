@@ -399,18 +399,15 @@ static void disable_analog_comparator() {
 }
 
 #define STARTUP_DELAY_MS 80
-static void blink_on_startup() {
-    // this should draw a clockwise circle starting with hour8
-    led_minutes_off();
-    for(int8_t i = 3; i >= 0; --i) {
-        led_show_hours(1 << i);
-        _delay_ms(STARTUP_DELAY_MS);
-    }
-    led_hours_off();
-    for(int8_t i = 0; i < 6; ++i) {
-        led_show_minutes(1 << i);
-        _delay_ms(STARTUP_DELAY_MS);
-    }
+
+// this function should draw a clockwise circle starting with hour8, every call shows another LED, so we can see which part is stuck
+static void startup_debug_blink() {
+    static uint8_t startup_sequence_index = 0;
+    
+    led_show_bit_pattern((uint16_t)1 << startup_sequence_index);
+    
+    startup_sequence_index = increment_with_overflow(startup_sequence_index, 9, 0);
+    _delay_ms(STARTUP_DELAY_MS);
 }
 
 static void init_unused_pins() {
@@ -424,14 +421,28 @@ static void init_unused_pins() {
 }
 
 int main(void) {
+    // pins need to be initialized before we can blink
     init_unused_pins();
     led_init_outputs();
+    
+    startup_debug_blink();
+    
     init_lid_pin();
+    
+    startup_debug_blink();
+    
     init_button_pin();
+    
+    startup_debug_blink();
+    
     disable_analog_comparator();
+    
+    startup_debug_blink();
+    
     init_timer2(TIME_COUNTING_PRESCALER);
     
-    blink_on_startup();
+    startup_debug_blink();
+    
     show_time(watch_time);
     
     sei();

@@ -190,3 +190,56 @@ void leds_on() {
     minute2_on();
     minute1_on();
 }
+
+void led_show_bit_pattern(uint16_t bit_pattern) {
+    if(bit_pattern & 1) {
+        hour8_on();
+    } else {
+        hour8_off();
+    }
+    if(bit_pattern & 2) {
+        hour4_on();
+    } else {
+        hour4_off();
+    }
+    if(bit_pattern & 4) {
+        hour2_on();
+    } else {
+        hour2_off();
+    }
+    if(bit_pattern & 8) {
+        hour1_on();
+    } else {
+        hour1_off();
+    }
+    if(bit_pattern & 16) {
+        minute1_on();
+    } else {
+        minute1_off();
+    }
+    if(bit_pattern & 32) {
+        minute2_on();
+    } else {
+        minute2_off();
+    }
+    if(bit_pattern & 64) {
+        minute4_on();
+    } else {
+        minute4_off();
+    }
+    if(bit_pattern & 128) {
+        minute8_on();
+    } else {
+        minute8_off();
+    }
+    if(bit_pattern & 256) {
+        minute16_on();
+    } else {
+        minute16_off();
+    }
+    if(bit_pattern & 512) {
+        minute32_on();
+    } else {
+        minute32_off();
+    }
+}
