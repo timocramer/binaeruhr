@@ -176,23 +176,27 @@ static void button_up_action(uint8_t down_timer_value, uint8_t up_timer_value) {
 
 // interrupt of button pin
 ISR(INT0_vect) {
-    if(!lid_is_open()) {
-        // lid is closed, do nothing and reset every time setting states
-        lid_closed_action();
-        return;
-    }
+    const bool lid_open = lid_is_open();
 
     static uint8_t button_down_at = 0;
     if(button_is_down()) {
         button_down_at = current_timer_value();
     } else {
         const uint8_t button_up_at = current_timer_value();
-        button_up_action(button_down_at, button_up_at);
+        
+        if(lid_open) {
+            button_up_action(button_down_at, button_up_at);
+        }
         
         // set button_down_at, so that when multiple "up"-interrupts in a row happen,
         // they do not use the same "down"-interrupt tick value
         button_down_at = button_up_at;
         timer_overflows_with_button_pressed = 0;
+    }
+    
+    if(!lid_open) {
+        // lid is closed, do nothing and reset every time setting state
+        lid_closed_action();
     }
 }
 
