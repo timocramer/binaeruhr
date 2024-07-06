@@ -235,9 +235,15 @@ ISR(INT1_vect) {
     }
 }
 
+static void wait_for_finished_timer_operation() {
+    while(ASSR & (_BV(TCN2UB) | _BV(OCR2AUB) | _BV(OCR2BUB) | _BV(TCR2AUB) | _BV(TCR2BUB))) {
+        // do intentionally nothing
+    }
+}
+
 static void timer2_write_zero() {
-    OCR2A = 0; 
-    loop_until_bit_is_clear(ASSR, OCR2AUB);
+    OCR2A = 0;
+    wait_for_finished_timer_operation();
 }
 
 static void timer_overflow_action_in_show_time_mode() {
@@ -365,10 +371,11 @@ static void set_timer2_prescaler(uint16_t prescaler, bool reset_timer_value) {
     
     if(reset_timer_value) {
         TCNT2 = 0;
+        wait_for_finished_timer_operation();
     }
     
     TCCR2B = (TCCR2B & ~(_BV(CS22) | _BV(CS21) | _BV(CS20))) | new_prescaler_bits;
-    loop_until_bit_is_clear(ASSR, TCR2BUB);
+    wait_for_finished_timer_operation();
 }
 
 static void init_timer2(uint16_t prescaler) {
