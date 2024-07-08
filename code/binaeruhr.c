@@ -48,29 +48,6 @@ static uint16_t time_difference_in_ms(uint8_t timer_value_from, uint8_t timer_va
 static void set_timer2_prescaler(uint16_t prescaler, bool reset_timer_value);
 
 
-static void normalize_time(struct localtime *time) {
-    while(time->seconds >= 60) {
-        time->seconds -= 60;
-        time->minutes += 1;
-    }
-    while(time->minutes >= 60) {
-        time->minutes -= 60;
-        time->hours += 1;
-    }
-    while(time->hours > 12) {
-        time->hours -= 12;
-    }
-    if(time->hours == 0) {
-        time->hours = 12;
-    }
-}
-
-static void increment_time(struct localtime *time) {
-    time->seconds += SECOND_INCREMENT;
-    normalize_time(time);
-}
-
-
 static void init_lid_pin_interrupt() {
     uint8_t tmp = EICRA;
     // Any logical change on INT1 generates an interrupt request.
@@ -245,7 +222,7 @@ static void timer2_write_zero() {
 static void timer_overflow_action_in_show_time_mode() {
     // work on a copy, so that the volatile qualifier is not discarded
     struct localtime copy = watch_time;
-    increment_time(&copy);
+    increment_time(&copy, SECOND_INCREMENT);
     watch_time = copy;
     
     if(lid_is_open()) {

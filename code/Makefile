@@ -14,7 +14,7 @@ all: $(BINARY)
 %.o: %.c $(HEADERS)
 	$(CC) -c -o $@ $(CFLAGS) $<
 
-%.elf: binaeruhr.o led.o flash_time.o
+%.elf: binaeruhr.o led.o flash_time.o localtime.o
 	$(CC) -o $@ $(CFLAGS) $^ $(LDFLAGS)
 
 %.hex: %.elf
