@@ -2,3 +2,4 @@
 binaeruhr.elf
 binaeruhr.hex
 *.s
+flash_time.bin

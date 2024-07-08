@@ -5,13 +5,9 @@
 #include <avr/sleep.h>
 #include <util/delay.h>
 
+#include "localtime.h"
 #include "led.h"
-
-struct localtime {
-    uint8_t seconds;
-    uint8_t minutes;
-    uint8_t hours;
-};
+#include "flash_time.h"
 
 static const uint16_t TIME_SETTING_PRESCALER = 64;
 
@@ -480,6 +476,12 @@ int main(void) {
     
     startup_debug_blink();
     init_timer2(TIME_COUNTING_PRESCALER);
+    
+    startup_debug_blink();
+    struct localtime init_watch_time;
+    load_flash_time_from_eeprom(&init_watch_time);
+    normalize_time(&init_watch_time);
+    watch_time = init_watch_time;
     
     startup_debug_blink();
     show_time(watch_time);
