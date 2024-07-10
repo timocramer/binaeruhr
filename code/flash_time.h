@@ -4,4 +4,4 @@
 
 #include "localtime.h"
 
-void load_flash_time_from_eeprom(struct localtime *time);
+void load_time_from_eeprom(struct localtime *time);

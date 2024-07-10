@@ -435,6 +435,13 @@ static void init_unused_pins() {
     PORTD |= (_BV(PD5) | _BV(PD6) | _BV(PD7));
 }
 
+static void initialize_time_from_eeprom() {
+    struct localtime init_watch_time;
+    load_time_from_eeprom(&init_watch_time);
+    normalize_time(&init_watch_time);
+    watch_time = init_watch_time;
+}
+
 int main(void) {
     // pins need to be initialized before we can blink
     init_unused_pins();
@@ -455,10 +462,7 @@ int main(void) {
     init_timer2(TIME_COUNTING_PRESCALER);
     
     startup_debug_blink();
-    struct localtime init_watch_time;
-    load_flash_time_from_eeprom(&init_watch_time);
-    normalize_time(&init_watch_time);
-    watch_time = init_watch_time;
+    initialize_time_from_eeprom();
     
     startup_debug_blink();
     show_time(watch_time);
