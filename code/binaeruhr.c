@@ -187,7 +187,7 @@ ISR(INT0_vect) {
     if(button_is_down()) {
         button_down_at = current_timer_value();
     } else {
-        uint8_t button_up_at = current_timer_value();
+        const uint8_t button_up_at = current_timer_value();
         button_up_action(button_down_at, button_up_at);
         
         // set button_down_at, so that when multiple "up"-interrupts in a row happen,
