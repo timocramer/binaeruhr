@@ -212,34 +212,6 @@ void led_show_bit_pattern(uint16_t bit_pattern) {
     } else {
         hour1_off();
     }
-    if(bit_pattern & 16) {
-        minute1_on();
-    } else {
-        minute1_off();
-    }
-    if(bit_pattern & 32) {
-        minute2_on();
-    } else {
-        minute2_off();
-    }
-    if(bit_pattern & 64) {
-        minute4_on();
-    } else {
-        minute4_off();
-    }
-    if(bit_pattern & 128) {
-        minute8_on();
-    } else {
-        minute8_off();
-    }
-    if(bit_pattern & 256) {
-        minute16_on();
-    } else {
-        minute16_off();
-    }
-    if(bit_pattern & 512) {
-        minute32_on();
-    } else {
-        minute32_off();
-    }
+    bit_pattern >>= 4;
+    led_show_minutes(bit_pattern);
 }
