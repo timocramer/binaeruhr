@@ -16,7 +16,6 @@ void led_show_minutes(uint8_t minutes);
 // led | h8  h4  h2  h1  m1  m2  m4  m8  m16 m23
 void led_show_bit_pattern(uint16_t bit_pattern);
 
-void leds_on();
 void leds_off();
 void led_hours_off();
 void led_minutes_off();

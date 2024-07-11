@@ -178,19 +178,6 @@ void leds_off() {
     led_minutes_off();
 }
 
-void leds_on() {
-    hour8_on();
-    hour4_on();
-    hour2_on();
-    hour1_on();
-    minute32_on();
-    minute16_on();
-    minute8_on();
-    minute4_on();
-    minute2_on();
-    minute1_on();
-}
-
 void led_show_bit_pattern(uint16_t bit_pattern) {
     if(bit_pattern & 0b0001) {
         hour8_on();
