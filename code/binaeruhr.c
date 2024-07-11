@@ -101,12 +101,10 @@ static void switch_time_setting_state() {
     case JUST_SHOW_TIME:
         watch_state = SET_HOURS;
         set_timer2_prescaler(TIME_SETTING_PRESCALER, true);
-        show_leds_to_set = false;
         break;
     case SET_HOURS:
         watch_state = SET_MINUTES;
         set_timer2_prescaler(TIME_SETTING_PRESCALER, true);
-        show_leds_to_set = false;
         break;
     case SET_MINUTES:
         set_time_showing_mode(true);
@@ -116,6 +114,8 @@ static void switch_time_setting_state() {
         break;
     };
     
+    // start time setting modes with the corresponding leds off
+    show_leds_to_set = false;
     // reset seconds on every state change
     watch_time.seconds = 0;
 }
