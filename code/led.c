@@ -192,22 +192,22 @@ void leds_on() {
 }
 
 void led_show_bit_pattern(uint16_t bit_pattern) {
-    if(bit_pattern & 1) {
+    if(bit_pattern & 0b0001) {
         hour8_on();
     } else {
         hour8_off();
     }
-    if(bit_pattern & 2) {
+    if(bit_pattern & 0b0010) {
         hour4_on();
     } else {
         hour4_off();
     }
-    if(bit_pattern & 4) {
+    if(bit_pattern & 0b0100) {
         hour2_on();
     } else {
         hour2_off();
     }
-    if(bit_pattern & 8) {
+    if(bit_pattern & 0b1000) {
         hour1_on();
     } else {
         hour1_off();
