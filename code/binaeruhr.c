@@ -400,7 +400,9 @@ static void startup_circle_blink(uint8_t iterations) {
     for(uint8_t i = 0; i < iterations; ++i) {
         led_show_bit_pattern(bit_pattern);
         
-        if(bit_pattern & 1024) {
+        // draw a full circle, then open it from the back until every led is off.
+        // this means, we check if the last led is on, and after that turn every following led off
+        if(bit_pattern & (1 << 10)) {
             bit_pattern = (bit_pattern << 1) | 0;
         } else {
             bit_pattern = (bit_pattern << 1) | 1;
