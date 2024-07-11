@@ -218,10 +218,7 @@ static void timer2_write_zero() {
 }
 
 static void timer_overflow_action_in_show_time_mode() {
-    // work on a copy, so that the volatile qualifier is not discarded
-    struct localtime copy = watch_time;
-    increment_time(&copy, SECOND_INCREMENT);
-    watch_time = copy;
+    watch_time = increment_time(watch_time, SECOND_INCREMENT);
     
     if(lid_is_open()) {
         show_time();
@@ -434,10 +431,8 @@ static void init_unused_pins() {
 }
 
 static void initialize_time_from_eeprom() {
-    struct localtime init_watch_time;
-    load_time_from_eeprom(&init_watch_time);
-    normalize_time(&init_watch_time);
-    watch_time = init_watch_time;
+    const struct localtime init_watch_time = load_time_from_eeprom();
+    watch_time = normalize_time(init_watch_time);
 }
 
 int main(void) {
