@@ -9,18 +9,16 @@
 #include "led.h"
 #include "flash_time.h"
 
-static const uint16_t TIME_SETTING_PRESCALER = 64;
+static constexpr uint16_t TIME_SETTING_PRESCALER = 64;
+static constexpr uint16_t TIME_COUNTING_PRESCALER = 1024;
 
-#define TIME_COUNTING_PRESCALER 1024
-#if TIME_COUNTING_PRESCALER < 128
-    #error "TIME_COUNTING_PRESCALER needs to be at least 128"
-#endif
+static_assert(TIME_COUNTING_PRESCALER >= 128, "TIME_COUNTING_PRESCALER needs to be at least 128");
 
-static const uint16_t QUARTZ_FREQUENCY = 32768;
-static const uint16_t TIMER_OVERFLOW_TICKS = 256;
+static constexpr uint16_t QUARTZ_FREQUENCY = 32768;
+static constexpr uint16_t TIMER_OVERFLOW_TICKS = 256;
 
 // quartz frequency is 32768 Hz and timer has 8 bits, so a timer overflow happens every (prescaler / (32768 / 256)) seconds
-static const uint8_t SECOND_INCREMENT = (uint16_t)TIME_COUNTING_PRESCALER / (QUARTZ_FREQUENCY / TIMER_OVERFLOW_TICKS);
+static constexpr uint8_t SECOND_INCREMENT = (uint16_t)TIME_COUNTING_PRESCALER / (QUARTZ_FREQUENCY / TIMER_OVERFLOW_TICKS);
 
 // debug
 // static const uint8_t SECOND_INCREMENT = 60;
