@@ -39,7 +39,7 @@ static volatile enum state watch_state = JUST_SHOW_TIME;
 static volatile uint8_t timer_overflows_with_button_pressed = 0;
 static volatile bool show_leds_to_set = false;
 
-static void show_time(const struct localtime);
+static void show_time();
 
 static uint8_t current_timer_value();
 static uint16_t time_difference_in_ms(uint8_t timer_value_from, uint8_t timer_value_to, uint8_t timer_overflows);
@@ -109,7 +109,7 @@ static void switch_time_setting_state() {
     case SET_MINUTES:
         set_time_showing_mode(true);
         if(lid_is_open()) {
-            show_time(watch_time);
+            show_time();
         }
         break;
     };
@@ -134,12 +134,12 @@ static uint8_t increment_with_overflow(uint8_t value, uint8_t maxValue, uint8_t 
 
 static void time_setting_increment_hours() {
     watch_time.hours = increment_with_overflow(watch_time.hours, 12, 1);
-    show_time(watch_time);
+    show_time();
 }
 
 static void time_setting_increment_minutes() {
     watch_time.minutes = increment_with_overflow(watch_time.minutes, 59, 0);
-    show_time(watch_time);
+    show_time();
 }
 
 static void short_press_action() {
@@ -200,7 +200,7 @@ ISR(INT0_vect) {
 // interrupt of lid pin
 ISR(INT1_vect) {
     if(lid_is_open()) {
-        show_time(watch_time);
+        show_time();
     } else {
         lid_closed_action();
     }
@@ -224,7 +224,7 @@ static void timer_overflow_action_in_show_time_mode() {
     watch_time = copy;
     
     if(lid_is_open()) {
-        show_time(watch_time);
+        show_time();
     } else {
         lid_closed_action();
     }
@@ -279,8 +279,8 @@ ISR(TIMER2_OVF_vect) {
     }
 }
 
-static void show_time(const struct localtime time) {
-    led_show_time(time.hours, time.minutes);
+static void show_time() {
+    led_show_time(watch_time.hours, watch_time.minutes);
 }
 
 static uint16_t current_timer_prescaler() {
@@ -463,7 +463,7 @@ int main(void) {
     initialize_time_from_eeprom();
     
     startup_debug_blink();
-    show_time(watch_time);
+    show_time();
     
     sei();
     
