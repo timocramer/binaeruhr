@@ -356,9 +356,7 @@ static void reset_unused_timer_registers() {
     
     wait_for_finished_timer_operation();
     TCCR2A = 0x00;
-    wait_for_finished_timer_operation();
     OCR2A = 0x00;
-    wait_for_finished_timer_operation();
     OCR2B = 0x00;
     wait_for_finished_timer_operation();
 }
