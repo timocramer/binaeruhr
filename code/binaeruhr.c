@@ -161,7 +161,6 @@ static void button_up_action(uint8_t down_timer_value, uint8_t up_timer_value) {
     
     if(milliseconds_pressed < 180) {
         // too short, do nothing
-        return;
     } else if(milliseconds_pressed < 1000) {
         // short press
         short_press_action();
