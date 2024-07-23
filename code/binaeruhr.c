@@ -306,6 +306,7 @@ static uint16_t current_timer_prescaler() {
 // prescaler = 1: no prescaling
 static void set_timer2_prescaler(uint16_t prescaler, bool reset_timer_value) {
     uint8_t new_prescaler_bits = 0;
+    bool timer_register_changed = false;
     
     switch(prescaler) {
     case 0:
@@ -338,7 +339,7 @@ static void set_timer2_prescaler(uint16_t prescaler, bool reset_timer_value) {
     
     if(reset_timer_value) {
         TCNT2 = 0;
-        wait_for_finished_timer_operation();
+        timer_register_changed = true;
     }
     
     const uint8_t current_register_value = TCCR2B;
@@ -346,6 +347,10 @@ static void set_timer2_prescaler(uint16_t prescaler, bool reset_timer_value) {
     
     if(current_prescaler_bits != new_prescaler_bits) {
         TCCR2B = (current_register_value & ~(_BV(CS22) | _BV(CS21) | _BV(CS20))) | new_prescaler_bits;
+        timer_register_changed = true;
+    }
+    
+    if(timer_register_changed) {
         wait_for_finished_timer_operation();
     }
 }
