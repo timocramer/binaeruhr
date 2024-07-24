@@ -7,5 +7,6 @@ struct localtime load_time_from_eeprom() {
     time.hours = eeprom_read_byte((uint8_t *)0);
     time.minutes = eeprom_read_byte((uint8_t *)1);
     time.seconds = eeprom_read_byte((uint8_t *)2);
-    return time;
+    
+    return normalize_time(time);
 }

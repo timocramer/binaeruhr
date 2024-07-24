@@ -435,8 +435,7 @@ static void init_unused_pins() {
 }
 
 static void initialize_time_from_eeprom() {
-    const struct localtime init_watch_time = load_time_from_eeprom();
-    watch_time = normalize_time(init_watch_time);
+    watch_time = load_time_from_eeprom();
 }
 
 int main(void) {
