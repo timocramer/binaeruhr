@@ -41,7 +41,7 @@ To solder and assemble the pocket watch, you need
 
 ![](readme-images/bend-wire.jpg)
 
-7. Solder the pogo pins to bigger pads on the back of the PCB. Make sure the upper makes contact when the button is pressed and the upper makes contact when the lid is closed.
+7. Solder the pogo pins to bigger pads on the back of the PCB. Make sure the upper makes contact when the button is pressed and the lower makes contact when the lid is closed.
 
 ![](readme-images/pogo-pins.jpg)
 
