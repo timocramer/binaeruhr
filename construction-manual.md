@@ -49,7 +49,7 @@ To solder and assemble the pocket watch, you need
 
 ![](readme-images/flashing.jpg)
 
-9. Use some paper towel or cloth to keep the PCB in place in the enclosure. Also the battery should *not* make contact with the back of the enclosure.
+9. Insert the battery into the PCB. Insert the PCB into the enclosure. Use some paper towel or cloth to keep the PCB in place in the enclosure. Also the battery should *not* make contact with the back of the enclosure.
 
 ![](readme-images/paper-towel.jpg)
 
