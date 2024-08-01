@@ -8,13 +8,13 @@ To solder and assemble the pocket watch, you need
 - 10x 0805 resistors for the LEDs (I use 470Ω)
 - 2x 0805 1MΩ resistors
 - 1x 32768Hz quartz, 6pF (I use MS1V-T1K)
-- 1x SMD battery holder for a CR3032
+- 1x SMD battery holder for a CR2032
 - 2x pogo pin
 - stiff wire that can be soldered to the PCB
 - a pocket watch enclosure
 - superglue
 - USBASP or similar for flashing
-- 1x CR3032 battery
+- 1x CR2032 battery
 - some paper towel or cloth
 
 # assembly
