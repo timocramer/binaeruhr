@@ -17,7 +17,8 @@ static_assert(TIME_COUNTING_PRESCALER >= 128, "TIME_COUNTING_PRESCALER needs to 
 static constexpr uint16_t QUARTZ_FREQUENCY = 32768;
 static constexpr uint16_t TIMER_OVERFLOW_TICKS = 256;
 
-// quartz frequency is 32768 Hz and timer has 8 bits, so a timer overflow happens every (prescaler / (32768 / 256)) seconds
+// SECOND_INCREMENT is the number of seconds to add to the time when a timer interrupt occurs.
+// Quartz frequency is 32768 Hz and timer has 8 bits, so a timer overflow happens every (prescaler / (32768 / 256)) seconds.
 static constexpr uint8_t SECOND_INCREMENT = (uint16_t)TIME_COUNTING_PRESCALER / (QUARTZ_FREQUENCY / TIMER_OVERFLOW_TICKS);
 
 // debug
