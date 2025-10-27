@@ -113,7 +113,7 @@ static void switch_time_setting_state() {
             show_time();
         }
         break;
-    };
+    }
     
     // start time setting modes with the corresponding leds off
     show_leds_to_set = false;
@@ -154,7 +154,7 @@ static void short_press_action() {
     case SET_MINUTES:
         time_setting_increment_minutes();
         break;
-    };
+    }
 }
 
 static void button_up_action(uint8_t down_timer_value, uint8_t up_timer_value) {
@@ -265,7 +265,7 @@ static void timer_overflow_action() {
     case SET_MINUTES:
         timer_overflow_action_in_set_minutes_mode();
         break;
-    };
+    }
 }
 
 ISR(TIMER2_OVF_vect) {
