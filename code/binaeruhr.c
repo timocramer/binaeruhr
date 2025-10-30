@@ -92,6 +92,16 @@ static void set_time_showing_mode(bool reset_timer_value) {
     set_timer2_prescaler(TIME_COUNTING_PRESCALER, reset_timer_value);
 }
 
+static void set_hours_setting_mode() {
+    watch_state = SET_HOURS;
+    set_timer2_prescaler(TIME_SETTING_PRESCALER, true);
+}
+
+static void set_minutes_setting_mode() {
+    watch_state = SET_MINUTES;
+    set_timer2_prescaler(TIME_SETTING_PRESCALER, true);
+}
+
 static void lid_closed_action() {
     set_time_showing_mode(false);
     leds_off();
@@ -100,12 +110,10 @@ static void lid_closed_action() {
 static void switch_time_setting_state() {
     switch(watch_state) {
     case JUST_SHOW_TIME:
-        watch_state = SET_HOURS;
-        set_timer2_prescaler(TIME_SETTING_PRESCALER, true);
+        set_hours_setting_mode();
         break;
     case SET_HOURS:
-        watch_state = SET_MINUTES;
-        set_timer2_prescaler(TIME_SETTING_PRESCALER, true);
+        set_minutes_setting_mode();
         break;
     case SET_MINUTES:
         set_time_showing_mode(true);
