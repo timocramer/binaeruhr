@@ -9,24 +9,16 @@ FLASH_TIME_FILE=flash_time.bin
 # FLASH_TIME="14 7 5"
 FLASH_TIME=""
 
-function dec2hex() {
-    printf '%x' "$1"
-}
-
 function dec2bin() {
-    printf '%b' "\\x$(dec2hex "$1")"
+    printf "%b" "$(printf '\\x%02x' "$1")$(printf '\\x%02x' "$2")$(printf '\\x%02x' "$3")"
 }
 
 function writeFlashTime() {
-    rm -f "$FLASH_TIME_FILE"
-    
     if [ ! -n "$FLASH_TIME" ]; then
         FLASH_TIME="$(date '+%-H %-M %-S')"
     fi
     
-    echo "$FLASH_TIME" | tr ' ' "\n" | while read val; do
-        dec2bin $val >>"$FLASH_TIME_FILE"
-    done
+    dec2bin $FLASH_TIME >"$FLASH_TIME_FILE"
 }
 
 writeFlashTime
