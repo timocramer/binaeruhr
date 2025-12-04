@@ -24,6 +24,9 @@ static constexpr uint8_t SECOND_INCREMENT = (uint16_t)TIME_COUNTING_PRESCALER / 
 // debug
 // static const uint8_t SECOND_INCREMENT = 60;
 
+// the maximum time the watch should be shining when opened, to conserve energy
+static constexpr uint8_t SHINE_MAX_SECONDS = 20;
+
 static volatile struct localtime watch_time = {
     .seconds = 0,
     .hours = 1,
@@ -39,6 +42,8 @@ enum state {
 static volatile enum state watch_state = JUST_SHOW_TIME;
 static volatile uint8_t timer_overflows_with_button_pressed = 0;
 static volatile bool show_leds_to_set = false;
+
+static volatile uint8_t opened_second_counter = 0;
 
 static void show_time();
 
@@ -215,6 +220,8 @@ ISR(INT1_vect) {
         show_time();
     } else {
         lid_closed_action();
+        // reset this only on explicit close of the watch
+        opened_second_counter = 0;
     }
 }
 
@@ -232,7 +239,10 @@ static void timer2_write_zero() {
 static void timer_overflow_action_in_show_time_mode() {
     watch_time = increment_time(watch_time, SECOND_INCREMENT);
     
-    if(lid_is_open()) {
+    if(lid_is_open() && (opened_second_counter <= SHINE_MAX_SECONDS)) {
+        // this is inaccurate, but should feel okay
+        opened_second_counter += SECOND_INCREMENT;
+
         show_time();
     } else {
         lid_closed_action();
